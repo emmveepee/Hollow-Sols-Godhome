@@ -110,6 +110,55 @@ internal static class FailureReportChecks
             Need(afterClose.FindPending() == closeIncident, "Orderly close erased a previously captured incident");
         }
 
+        // Simulate each close order, including both applications quitting while
+        // the peer's channel-failure callback is already queued. Final orderly
+        // records fence exact session/connection/role; they are not save receipts.
+        foreach (var firstSide in new[] { GameSide.HollowKnight, GameSide.NineSols }) {
+            string raceRoot = Path.Combine(root, "peer-close-" + firstSide);
+            var firstStore = new FailureReportStore(raceRoot, runs);
+            var secondStore = new FailureReportStore(raceRoot, runs);
+            Guid race = Guid.NewGuid(), link = Guid.NewGuid(), firstOwner = Guid.NewGuid(), secondOwner = Guid.NewGuid();
+            var secondSide = firstSide == GameSide.HollowKnight ? GameSide.NineSols : GameSide.HollowKnight;
+            var firstContext = new ReportContext(race, race, link, firstSide, "candidate", "room");
+            var secondContext = new ReportContext(race, race, link, secondSide, "candidate", "room");
+            firstStore.Arm(firstOwner, firstContext, 123, 456); secondStore.Arm(secondOwner, secondContext, 234, 567);
+            firstStore.RecordOrderlyExit(firstOwner, firstContext);
+            Need(!secondStore.CapturePeerFailure(secondContext, "VISUAL_CHANNEL_STOPPED", "native shutdown"), "Normal peer teardown became an incident");
+            secondStore.RecordOrderlyExit(secondOwner, secondContext);
+            Need(!firstStore.CapturePeerFailure(firstContext, "PEER_DISCONNECTED", "both windows closing"), "Rapid simultaneous close became an incident");
+            var raceRestart = new FailureReportStore(raceRoot, runs); raceRestart.RecoverAbandoned((_, _) => false);
+            Need(raceRestart.FindPending() == null, "Confirmed orderly shutdown prompted after restart");
+            Need(!Directory.EnumerateFiles(Path.Combine(raceRoot, "active")).Any(), "Orderly active markers were not retired");
+
+            Guid other = Guid.NewGuid();
+            var unrelated = new ReportContext(other, other, link, secondSide, "candidate", "room");
+            Need(secondStore.CapturePeerFailure(unrelated, "PEER_DISCONNECTED", "genuine loss"), "Other session's normal exit hid a crash");
+            secondStore.Acknowledge(other);
+            var changedLink = new ReportContext(race, race, Guid.NewGuid(), secondSide, "candidate", "room");
+            Need(secondStore.CapturePeerFailure(changedLink, "PEER_DISCONNECTED", "foreign connection"), "Foreign connection exit hid a crash");
+            Need(secondStore.FindPending() == race, "Unmatched channel failure was not retained");
+            Need(secondStore.CapturePeerFailure(secondContext, "PEER_DISCONNECTED", "after real failure"), "Later normal close hid frozen incident metadata");
+            secondStore.RecordOrderlyExit(secondOwner, secondContext);
+            raceRestart.RecoverAbandoned((_, _) => false);
+            Need(raceRestart.FindPending() == race, "Normal exit erased an existing real incident");
+        }
+        string wrongRoot = Path.Combine(root, "wrong-exit-owner"); var wrongStore = new FailureReportStore(wrongRoot, runs);
+        Guid wrongIncident = Guid.NewGuid(), wrongInstance = Guid.NewGuid();
+        var wrongContext = new ReportContext(wrongIncident, wrongIncident, connection, GameSide.NineSols, "candidate", "room");
+        wrongStore.Arm(wrongInstance, wrongContext, 123, 456); wrongStore.RecordOrderlyExit(Guid.NewGuid(), wrongContext);
+        wrongStore.RecoverAbandoned((_, _) => false);
+        Need(wrongStore.FindPending() == wrongIncident, "Another process instance's exit hid an abandoned owner");
+
+        string damagedRoot = Path.Combine(root, "damaged-exit-marker"); var damagedStore = new FailureReportStore(damagedRoot, runs);
+        Guid damagedIncident = Guid.NewGuid();
+        var damagedPeer = new ReportContext(damagedIncident, damagedIncident, connection, GameSide.NineSols, "candidate", "room");
+        var damagedHost = new ReportContext(damagedIncident, damagedIncident, connection, GameSide.HollowKnight, "candidate", "room");
+        damagedStore.RecordOrderlyExit(Guid.NewGuid(), damagedPeer);
+        string exitFile = Path.Combine(damagedRoot, "orderly", damagedIncident.ToString("N"), "NineSols.exit");
+        File.WriteAllBytes(exitFile, new byte[] { 1, 2, 3 });
+        Need(damagedStore.CapturePeerFailure(damagedHost, "VISUAL_CHANNEL_STOPPED", ""), "Malformed exit evidence hid a channel failure");
+        Need(File.ReadAllBytes(exitFile).SequenceEqual(new byte[] { 1, 2, 3 }), "Malformed shutdown evidence was destroyed");
+
         // Capture/export failures are bounded, preserve originals, and leave no partial published ZIP.
         Guid locked = Guid.NewGuid(); string incident = Path.Combine(storage, "incidents", locked.ToString("N")); Directory.CreateDirectory(incident);
         using (var gate = new FileStream(Path.Combine(incident, "capture.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)) {
@@ -145,6 +194,6 @@ internal static class FailureReportChecks
         string local = FailureReportStore.OpenReport(report, null, _ => explorer++, _ => browser++);
         Need(browser == 1 && local.Contains("unavailable"), "Unconfigured repository invoked browser");
         Refuse(() => new ReportContext(Guid.NewGuid(), session, connection, GameSide.HollowKnight, "foreign", "room"));
-        Console.WriteLine("PASS: failure reports isolate two-role ordinary logs, redact/bound ZIPs, reuse snapshots, recover abandoned owners, drain queued window-close markers for both roles without erasing actual incidents, reject locked/interrupted exports, and provide offline browser fallbacks; no native saves/network/browser used.");
+        Console.WriteLine("PASS: failure reports isolate/redact/bound logs, handle rapid orderly peer exits in both close orders, retain real crashes and mismatched/corrupt exit evidence, recover abandoned owners, drain queued shutdown work, and preserve export/offline fallbacks; no native saves/network/browser used.");
     }
 }

@@ -85,6 +85,46 @@ public sealed class FailureReportStore
         });
     }
     public void Disarm(Guid instance) { string path = ActivePath(instance); if (File.Exists(path)) File.Delete(path); }
+    private string OrderlyPath(ReportContext context, GameSide side)
+    {
+        string path = Path.Combine(root, "orderly", context.Incident.ToString("N"), side + ".exit");
+        CheckPath(path); return path;
+    }
+    // Application.quitting precedes native OnApplicationQuit teardown. Persist
+    // exact scope so another process can classify the resulting pipe closures.
+    // These records are reporting metadata only, never a save/commit receipt.
+    public void RecordOrderlyExit(Guid instance, ReportContext context)
+    {
+        if (instance == Guid.Empty) throw new ArgumentException("Missing process instance.");
+        Atomic(OrderlyPath(context, context.Side), stream => {
+            using var w = new BinaryWriter(stream, utf8, true);
+            w.Write(0x31515848); w.Write(instance.ToByteArray());
+            w.Write(context.Session.ToByteArray()); w.Write(context.Connection.ToByteArray()); w.Write((byte)context.Side);
+        });
+    }
+    private bool HasOrderlyExit(ReportContext context, GameSide side, Guid? instance = null)
+    {
+        try {
+            string path = OrderlyPath(context, side);
+            if (!File.Exists(path)) return false;
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            if (stream.Length != 53) return false;
+            using var r = new BinaryReader(stream, utf8, true);
+            if (r.ReadInt32() != 0x31515848) return false;
+            Guid owner = new Guid(r.ReadBytes(16)), session = new Guid(r.ReadBytes(16)), connection = new Guid(r.ReadBytes(16));
+            return owner != Guid.Empty && (!instance.HasValue || owner == instance.Value)
+                && session == context.Session && connection == context.Connection && r.ReadByte() == (byte)side;
+        } catch (Exception e) when (e is IOException || e is UnauthorizedAccessException || e is ArgumentException) { return false; }
+    }
+    // Call only for a channel-loss failure, not an unrelated gameplay error.
+    public bool CapturePeerFailure(ReportContext context, string failure, string menuTail)
+    {
+        var peer = context.Side == GameSide.HollowKnight ? GameSide.NineSols : GameSide.HollowKnight;
+        // An already frozen real incident remains reportable even if the peer
+        // subsequently exits normally. Never acknowledge or erase it here.
+        if (!File.Exists(Path.Combine(IncidentPath(context.Incident), context.Side + ".txt")) && HasOrderlyExit(context, peer)) return false;
+        Capture(context, failure, menuTail); return true;
+    }
     // Application quit must not leave marker removal queued behind worker work
     // that the process is about to abandon. Keep disk I/O on a worker and wait
     // only at the final orderly-exit boundary, after native session cleanup.
@@ -110,7 +150,8 @@ public sealed class FailureReportStore
                 int process = r.ReadInt32(); long started = r.ReadInt64();
                 var context = new ReportContext(new Guid(r.ReadBytes(16)), new Guid(r.ReadBytes(16)), new Guid(r.ReadBytes(16)), (GameSide)r.ReadByte(), r.ReadString(), r.ReadString());
                 if (stream.Position != stream.Length || ownerAlive(process, started)) continue;
-                Capture(context, "Previous game process ended before orderly bridge shutdown.", "");
+                if (!HasOrderlyExit(context, context.Side, instance))
+                    Capture(context, "Previous game process ended before orderly bridge shutdown.", "");
                 Disarm(instance);
             } catch (Exception e) when (e is IOException || e is InvalidDataException || e is UnauthorizedAccessException || e is ArgumentException || e is FormatException) { /* Preserve corrupt/locked markers for inspection. */ }
         }

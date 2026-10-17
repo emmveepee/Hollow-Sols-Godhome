@@ -73,6 +73,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         InitializeFailureReporting();
         UnitySceneManager.sceneLoaded += OnScene;
         Application.wantsToQuit += CanQuit;
+        Application.quitting += NotifyOrderlyApplicationExit;
         Log("MENU_INFRASTRUCTURE_READY nativeSide=" + Side + " saveLoaded=False bridgeRequested=False");
     }
     internal void Log(string value) { Logger.LogInfo(value); RecordReportMenu(value); }
@@ -312,7 +313,9 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         RestoreFixtureBindings();
 #endif
         Log("MENU_BRIDGE_FAILURE " + error);
-        try { CaptureReportFailure(error.ToString()); } catch (Exception reportError) { Logger.LogWarning("REPORT_CAPTURE_UNAVAILABLE " + reportError.GetType().Name); }
+        bool peerChannelFailure = error is IOException && transport?.Failure != null
+            || error.Message == "VISUAL_CHANNEL_STOPPED" || error.Message == "PEER_DISCONNECTED" || error.Message == "CONTACT_CHANNEL_STOPPED";
+        try { CaptureReportFailure(error.ToString(), peerChannelFailure); } catch (Exception reportError) { Logger.LogWarning("REPORT_CAPTURE_UNAVAILABLE " + reportError.GetType().Name); }
         if (fixtureId != Guid.Empty && fixtureScenario.StartsWith("crash-", StringComparison.Ordinal)) {
             string crashMarker = Path.Combine(Path.GetDirectoryName(fixtureFolder)!, "fixture-crash.trigger");
             // Gameplay IPC can observe EOF before the next fixture Update.
@@ -371,6 +374,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         RestoreBridgeAudio();
 #endif
         Application.wantsToQuit -= CanQuit;
+        Application.quitting -= NotifyOrderlyApplicationExit;
         UnitySceneManager.sceneLoaded -= OnScene; transport?.Dispose(); menu?.Dispose();
         if (Instance == this) Instance = null;
     }
@@ -415,7 +419,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         return true;
     }
     private void OnApplicationQuit() {
-        CompleteReportShutdown();
+        NotifyOrderlyApplicationExit();
 #if !HOLLOW_KNIGHT
         RestoreFixtureBindings();
 #endif

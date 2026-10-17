@@ -36,8 +36,13 @@ internal static class PublicBuildChecks
             if (Array.IndexOf(calls, "CaptureReportFailure") < 0 || Array.IndexOf(calls, "CaptureReportFailure") >= Array.IndexOf(calls, "AbortNativeSession"))
                 throw new Exception("Failure snapshot is not scheduled before native teardown");
             var quit = menuPlugin.Methods.Single(m => m.Name == "OnApplicationQuit");
-            if (!quit.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "CompleteReportShutdown"))
+            if (!quit.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "NotifyOrderlyApplicationExit"))
                 throw new Exception("Application quit does not complete orderly report shutdown");
+            var earlyQuit = menuPlugin.Methods.Single(m => m.Name == "NotifyOrderlyApplicationExit");
+            var earlyCalls = earlyQuit.Body.Instructions.Where(i => i.Operand is MethodReference).Select(i => ((MethodReference)i.Operand).Name).ToArray();
+            if (Array.IndexOf(earlyCalls, "RecordOrderlyQuitIntent") < 0 || Array.IndexOf(earlyCalls, "RecordOrderlyQuitIntent") >= Array.IndexOf(earlyCalls, "CompleteReportShutdown")
+                || !menuPlugin.Methods.Single(m => m.Name == "Awake").Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "add_quitting"))
+                throw new Exception("Orderly exit is not recorded at the early application-quitting event");
             var orderly = menuPlugin.Methods.Single(m => m.Name == "CompleteReportShutdown");
             if (!orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "DisarmBeforeExit")
                 || orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "Acknowledge"))

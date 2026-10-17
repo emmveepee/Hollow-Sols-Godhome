@@ -33,6 +33,9 @@ public sealed partial class HollowSolsMenuPlugin
     private readonly object reportMenuGate = new object();
     private double preparingSince;
     private bool reportExportDelayShown;
+    private bool orderlyExitRecorded, orderlyPeerExit;
+    private Task<bool>? failureCapture;
+    private Action? deferredFailureNotice;
 
     private Task<T> ReportWork<T>(Func<T> work)
     {
@@ -77,6 +80,7 @@ public sealed partial class HollowSolsMenuPlugin
     private void BeginReportAttempt()
     {
         reportAttempt = Guid.NewGuid(); reportContext = null; currentReport = null; reportPromptShown = false; reportDisarmed = false;
+        orderlyPeerExit = false; failureCapture = null; deferredFailureNotice = null;
         lock (reportMenuGate) { reportMenuLines.Clear(); reportMenuCharacters = 0; }
         SyncReportContext();
     }
@@ -92,6 +96,7 @@ public sealed partial class HollowSolsMenuPlugin
     }
     private void DisarmReports()
     {
+        deferredFailureNotice = null;
         reportDisarmed = true;
         if (reports != null) _ = ReportWork(() => { reports.Disarm(reportInstance); return true; });
     }
@@ -106,7 +111,21 @@ public sealed partial class HollowSolsMenuPlugin
             }
         } catch (Exception error) { Logger.LogWarning("REPORT_ORDERLY_SHUTDOWN_UNAVAILABLE " + error.GetType().Name); }
     }
-    private void CaptureReportFailure(string failure)
+    private void RecordOrderlyQuitIntent()
+    {
+        if (reports == null || orderlyExitRecorded || reportDisarmed || currentReport.HasValue || reportContext == null
+            || controller?.Lifecycle.State == BridgeState.Failed) return;
+        orderlyExitRecorded = true; reportDisarmed = true;
+        var context = reportContext;
+        _ = ReportWork(() => { reports.RecordOrderlyExit(reportInstance, context); reports.Disarm(reportInstance); return true; });
+    }
+    private void NotifyOrderlyApplicationExit()
+    {
+        RecordOrderlyQuitIntent();
+        requestedQuit = true;
+        CompleteReportShutdown();
+    }
+    private void CaptureReportFailure(string failure, bool peerChannelFailure = false)
     {
         if (reports == null || reportDisarmed || requestedQuit || fixtureId != Guid.Empty) return;
         SyncReportContext();
@@ -115,10 +134,21 @@ public sealed partial class HollowSolsMenuPlugin
         string tail; lock (reportMenuGate) tail = string.Join("\n", reportMenuLines);
         if (currentReport == context.Incident) return;
         currentReport = context.Incident;
-        _ = ReportWork(() => { reports.Capture(context, failure, tail); reports.Disarm(reportInstance); return true; });
+        failureCapture = ReportWork(() => {
+            bool captured;
+            if (peerChannelFailure) captured = reports.CapturePeerFailure(context, failure, tail);
+            else { reports.Capture(context, failure, tail); captured = true; }
+            reports.Disarm(reportInstance); return captured;
+        });
     }
     private void ShowFailureNotice(string notice, Action continued, bool shutdown = false)
     {
+        if (failureCapture != null && !shutdown) {
+            deferredFailureNotice = () => ShowFailureNotice(notice, continued, shutdown);
+            if (!shutdown) menu?.Waiting("Ending the Hollow Sols session...");
+            return;
+        }
+        if (orderlyPeerExit && !shutdown) { continued(); return; }
         reportContinue = () => { AcknowledgeReport(); continued(); };
         if (currentReport.HasValue && reports != null || reports == null && fixtureId == Guid.Empty && !requestedQuit && !reportDisarmed) {
             reportPromptShown = true;
@@ -146,6 +176,15 @@ public sealed partial class HollowSolsMenuPlugin
     }
     private void UpdateFailureReporting()
     {
+        if (failureCapture?.IsCompleted == true) {
+            var completed = failureCapture; failureCapture = null;
+            if (completed.IsFaulted || completed.IsCanceled) { _ = completed.Exception; }
+            else if (!completed.Result) {
+                orderlyPeerExit = true; reportDisarmed = true; currentReport = null;
+                Log("REPORT_PEER_ORDERLY_EXIT exactScope=True channelClosureExpected=True committedCheckpointPreserved=True");
+            }
+            var notice = deferredFailureNotice; deferredFailureNotice = null; notice?.Invoke();
+        }
         if (preparingReport != null && !preparingReport.IsCompleted && Now - preparingSince > 10 && !reportExportDelayShown) {
             reportExportDelayShown = true;
             menu?.Notice("Report export is taking too long. You can continue safely; no files have been uploaded. Local report folder: " + reports!.Root,
