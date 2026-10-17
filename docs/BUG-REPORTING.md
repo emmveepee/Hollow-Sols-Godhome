@@ -36,6 +36,8 @@ The collector reads only known `plugin.log` startup/rotation/current and `bootst
 
 Active-session markers record process ID and start identity. On restart, an abandoned marker creates a report offer from available evidence; a live or uncertain owner is not declared dead. Normal exit/cancellation disarms markers, and Continue acknowledges a pending offer. Disk shutdown failure can leave an unconfirmed marker; recovery describes absence of a recorded orderly end, not proof of a crash. Reports/snapshots are not silently deleted; acknowledged reports remain local. No report journal mutates the save store.
 
+Closing either game with the window's X is an ordinary quit request. Existing native session/save cleanup runs first; the final application-quit callback waits up to two seconds for queued reporting work and this process's active-marker removal. A completed orderly close must not produce a new restart report offer. Actual previously captured failures remain available. Report I/O failure or timeout is logged without preventing exit; an unconfirmed shutdown is not declared successfully recorded.
+
 ## Validation and remaining gates
 
 PairedSaveChecks includes synthetic two-role, missing-peer, redaction, source-preservation, large-tail, duplicate export, restart/live-owner/normal-disarm, lock/contention, interrupted-export and offline launcher tests. Existing Bridge/Foundation checks exercise EOF, stale/timeout/mismatched identities and lifecycle cancellation separately. GuardChecks has a `public-build` mode to inspect the compiled public plugins for absence of the F9 menu/renderer and detailed activation/I/O, and verify report scheduling precedes native teardown:

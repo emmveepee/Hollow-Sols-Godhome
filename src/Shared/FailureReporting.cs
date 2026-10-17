@@ -95,6 +95,17 @@ public sealed partial class HollowSolsMenuPlugin
         reportDisarmed = true;
         if (reports != null) _ = ReportWork(() => { reports.Disarm(reportInstance); return true; });
     }
+    private void CompleteReportShutdown()
+    {
+        reportDisarmed = true;
+        if (reports == null) return;
+        try {
+            lock (reportQueueGate) {
+                if (!reports.DisarmBeforeExit(reportInstance, reportWork, TimeSpan.FromSeconds(2)))
+                    Logger.LogWarning("REPORT_ORDERLY_SHUTDOWN_UNCONFIRMED workerDeadlineSeconds=2");
+            }
+        } catch (Exception error) { Logger.LogWarning("REPORT_ORDERLY_SHUTDOWN_UNAVAILABLE " + error.GetType().Name); }
+    }
     private void CaptureReportFailure(string failure)
     {
         if (reports == null || reportDisarmed || requestedQuit || fixtureId != Guid.Empty) return;

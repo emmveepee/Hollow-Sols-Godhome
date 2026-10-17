@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using HollowSols.Foundation;
 
 internal static class FailureReportChecks
@@ -80,6 +82,34 @@ internal static class FailureReportChecks
         store.Arm(instance, previous, 123, 456); store.Disarm(instance); store.RecoverAbandoned((_, _) => false);
         Need(store.FindPending() == null, "Normal exit/cancel generated a crash report");
 
+        // A window-close callback must finish removal after queued marker writes,
+        // rather than scheduling it and immediately allowing the process to exit.
+        foreach (var side in new[] { GameSide.HollowKnight, GameSide.NineSols }) {
+            string closeRoot = Path.Combine(root, "window-close-" + side);
+            var closing = new FailureReportStore(closeRoot, runs);
+            Guid closeInstance = Guid.NewGuid(), closeIncident = Guid.NewGuid();
+            var closeContext = new ReportContext(closeIncident, closeIncident, connection, side, "window-close", "room");
+            using var releaseArm = new ManualResetEventSlim();
+            using var armStarted = new ManualResetEventSlim();
+            Task queuedArm = Task.Run(() => { armStarted.Set(); releaseArm.Wait(); closing.Arm(closeInstance, closeContext, 123, 456); });
+            Need(armStarted.Wait(TimeSpan.FromSeconds(2)), "Queued arm did not start");
+            try {
+                Need(!closing.DisarmBeforeExit(closeInstance, queuedArm, TimeSpan.Zero), "Shutdown ignored outstanding report work");
+            } finally { releaseArm.Set(); }
+            Need(closing.DisarmBeforeExit(closeInstance, queuedArm, TimeSpan.FromSeconds(2)), "Orderly shutdown did not drain queued arm");
+            var afterClose = new FailureReportStore(closeRoot, runs); afterClose.RecoverAbandoned((_, _) => false);
+            Need(afterClose.FindPending() == null, "Graceful window close prompted on restart");
+            closing.Arm(closeInstance, closeContext, 123, 456);
+            Need(closing.DisarmBeforeExit(closeInstance, Task.FromException(new IOException("prior report work failed")), TimeSpan.FromSeconds(2)), "Earlier worker failure prevented orderly disarm");
+            Need(closing.DisarmBeforeExit(closeInstance, Task.CompletedTask, TimeSpan.FromSeconds(2)), "Repeated orderly disarm failed");
+            afterClose.RecoverAbandoned((_, _) => false);
+            Need(afterClose.FindPending() == null, "Repeated/faulted-worker shutdown prompted on restart");
+            // Explicit shutdown does not erase a genuine incident or its evidence.
+            closing.Capture(closeContext, "actual unexpected failure before closing", "preserved");
+            Need(closing.DisarmBeforeExit(closeInstance, Task.CompletedTask, TimeSpan.FromSeconds(2)), "Failure-followed-by-close did not finish");
+            Need(afterClose.FindPending() == closeIncident, "Orderly close erased a previously captured incident");
+        }
+
         // Capture/export failures are bounded, preserve originals, and leave no partial published ZIP.
         Guid locked = Guid.NewGuid(); string incident = Path.Combine(storage, "incidents", locked.ToString("N")); Directory.CreateDirectory(incident);
         using (var gate = new FileStream(Path.Combine(incident, "capture.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)) {
@@ -115,6 +145,6 @@ internal static class FailureReportChecks
         string local = FailureReportStore.OpenReport(report, null, _ => explorer++, _ => browser++);
         Need(browser == 1 && local.Contains("unavailable"), "Unconfigured repository invoked browser");
         Refuse(() => new ReportContext(Guid.NewGuid(), session, connection, GameSide.HollowKnight, "foreign", "room"));
-        Console.WriteLine("PASS: failure reports isolate two-role ordinary logs, redact/bound ZIPs, reuse snapshots, recover abandoned owners, suppress orderly exits, reject locked/interrupted exports, and provide offline browser fallbacks; no native saves/network/browser used.");
+        Console.WriteLine("PASS: failure reports isolate two-role ordinary logs, redact/bound ZIPs, reuse snapshots, recover abandoned owners, drain queued window-close markers for both roles without erasing actual incidents, reject locked/interrupted exports, and provide offline browser fallbacks; no native saves/network/browser used.");
     }
 }

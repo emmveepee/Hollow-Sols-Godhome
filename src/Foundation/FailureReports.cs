@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace HollowSols.Foundation;
 
@@ -84,6 +85,17 @@ public sealed class FailureReportStore
         });
     }
     public void Disarm(Guid instance) { string path = ActivePath(instance); if (File.Exists(path)) File.Delete(path); }
+    // Application quit must not leave marker removal queued behind worker work
+    // that the process is about to abandon. Keep disk I/O on a worker and wait
+    // only at the final orderly-exit boundary, after native session cleanup.
+    public bool DisarmBeforeExit(Guid instance, Task pendingWork, TimeSpan timeout)
+    {
+        if (pendingWork == null) throw new ArgumentNullException(nameof(pendingWork));
+        if (timeout < TimeSpan.Zero || timeout > TimeSpan.FromSeconds(2)) throw new ArgumentOutOfRangeException(nameof(timeout));
+        var shutdown = pendingWork.ContinueWith(_ => Disarm(instance), TaskScheduler.Default);
+        _ = shutdown.ContinueWith(t => { _ = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
+        return shutdown.Wait(timeout);
+    }
     public void RecoverAbandoned(Func<int, long, bool> ownerAlive)
     {
         string directory = Path.Combine(root, "active"); CheckPath(directory);

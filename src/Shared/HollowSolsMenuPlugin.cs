@@ -336,7 +336,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         return true;
     }
     private void OnApplicationQuit() {
-        DisarmReports();
+        CompleteReportShutdown();
 #if !HOLLOW_KNIGHT
         RestoreFixtureBindings();
 #endif

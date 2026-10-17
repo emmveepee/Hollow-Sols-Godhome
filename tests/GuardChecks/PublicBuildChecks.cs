@@ -32,6 +32,13 @@ internal static class PublicBuildChecks
             var calls = failure.Body.Instructions.Where(i => i.Operand is MethodReference).Select(i => ((MethodReference)i.Operand).Name).ToArray();
             if (Array.IndexOf(calls, "CaptureReportFailure") < 0 || Array.IndexOf(calls, "CaptureReportFailure") >= Array.IndexOf(calls, "AbortNativeSession"))
                 throw new Exception("Failure snapshot is not scheduled before native teardown");
+            var quit = menuPlugin.Methods.Single(m => m.Name == "OnApplicationQuit");
+            if (!quit.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "CompleteReportShutdown"))
+                throw new Exception("Application quit does not complete orderly report shutdown");
+            var orderly = menuPlugin.Methods.Single(m => m.Name == "CompleteReportShutdown");
+            if (!orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "DisarmBeforeExit")
+                || orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "Acknowledge"))
+                throw new Exception("Orderly quit must drain its active marker without erasing actual incidents");
             var notice = types.Single(t => t.Name == "NativeBridgeMenu").Methods.Single(m => m.Name == "FailureNotice");
             if (!notice.Body.Instructions.Any(i => Equals(i.Operand, "Prepare Bug Report")) || !notice.Body.Instructions.Any(i => Equals(i.Operand, "Continue")))
                 throw new Exception("Native failure dialog lost reporting/continue choices");
