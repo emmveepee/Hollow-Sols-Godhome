@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><AssemblyName>YiGodhome.HollowKnight</AssemblyName><DefineConstants>$(DefineConstants);HOLLOW_KNIGHT</DefineConstants></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Foundation/Foundation.csproj" Private="false" />
+    <Compile Include="../Shared/HollowSolsMenuPlugin.cs" Link="HollowSolsMenuPlugin.cs" />
+    <Compile Include="../Shared/HollowSolsSessions.cs" Link="HollowSolsSessions.cs" />
+    <Compile Include="../Shared/FailureReporting.cs" Link="FailureReporting.cs" />
+    <Compile Include="../Shared/NativeMenuFixture.cs" Link="NativeMenuFixture.cs" />
+    <Compile Include="../Shared/NativeGameplayFixture.cs" Link="NativeGameplayFixture.cs" />
+    <Compile Include="../Shared/RosterEnduranceFixture.cs" Link="RosterEnduranceFixture.cs" />
+    <Reference Include="UnityEngine.AnimationModule"><HintPath>$(HollowKnightManaged)/UnityEngine.AnimationModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(HollowKnightManaged)/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(HollowKnightManaged)/UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(HollowKnightManaged)/UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
+    <Compile Include="../Shared/DetailedLogging.cs" Link="DetailedLogging.cs" />
+    <Compile Include="../Shared/BaselinePlugin.cs" Link="BaselinePlugin.cs" />
+    <Compile Include="../Shared/HubCombatLifecycle.cs" Link="HubCombatLifecycle.cs" />
+    <Compile Include="../Shared/DiagnosticCompletion.cs" Link="DiagnosticCompletion.cs" />
+    <Compile Include="../Shared/PantheonFixture.cs" Link="PantheonFixture.cs" />
+    <Compile Include="../Shared/PlayerToolsFixture.cs" Link="PlayerToolsFixture.cs" />
+    <Compile Include="../Shared/PresentationFixture.cs" Link="PresentationFixture.cs" />
+    <Compile Include="../Shared/FramePerformance.cs" Link="FramePerformance.cs" />
+    <Compile Include="../Shared/CollisionAudit.cs" Link="CollisionAudit.cs" />
+    <Compile Include="../Geometry/*.cs" Link="Geometry/%(Filename)%(Extension)" />
+    <Compile Include="../Bridge/*.cs" Link="Bridge/%(Filename)%(Extension)" />
+    <Reference Include="BepInEx"><HintPath>$(BepCore)/BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepCore)/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(HollowKnightManaged)/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="TeamCherry.TK2D"><HintPath>$(HollowKnightManaged)/TeamCherry.TK2D.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="PlayMaker"><HintPath>$(HollowKnightManaged)/PlayMaker.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="TeamCherry.SharedUtils"><HintPath>$(HollowKnightManaged)/TeamCherry.SharedUtils.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(HollowKnightManaged)/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(HollowKnightManaged)/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(HollowKnightManaged)/UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(HollowKnightManaged)/UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(HollowKnightManaged)/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.Physics2DModule"><HintPath>$(HollowKnightManaged)/UnityEngine.Physics2DModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule"><HintPath>$(HollowKnightManaged)/UnityEngine.ParticleSystemModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(HollowKnightManaged)/UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(HollowKnightManaged)/UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule"><HintPath>$(HollowKnightManaged)/UnityEngine.JSONSerializeModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

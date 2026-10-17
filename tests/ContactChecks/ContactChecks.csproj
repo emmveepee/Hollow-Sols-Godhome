@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework></PropertyGroup>
+  <ItemGroup><Compile Include="../../src/Bridge/*.cs" Link="Bridge/%(Filename)%(Extension)" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/PureVesselAttackWindows.cs" Link="PureVesselAttackWindows.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/RadianceAttackWindows.cs" Link="RadianceAttackWindows.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/CounterReceiptWindow.cs" Link="CounterReceiptWindow.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/CounterStunTimeline.cs" Link="CounterStunTimeline.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/DefenderEruptionSequence.cs" Link="DefenderEruptionSequence.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/GrimmFirebatStrike.cs" Link="GrimmFirebatStrike.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/RadianceEndVisibility.cs" Link="RadianceEndVisibility.cs" /></ItemGroup>
+</Project>

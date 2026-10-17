@@ -1,0 +1,55 @@
+# Deny by default. Only our authored project sources and documentation may enter Git.
+*
+!/.gitignore
+!/AGENTS.md
+!/README.md
+!/LICENSE
+!/CONTRIBUTING.md
+!/THIRD-PARTY-NOTICES.md
+!/.github/
+!/.github/ISSUE_TEMPLATE/
+!/.github/ISSUE_TEMPLATE/bug-report.yml
+!/.github/ISSUE_TEMPLATE/config.yml
+!/MODLOG.md
+!/STATUS.md
+!/Directory.Build.props
+!/global.json
+!/Start Yi in Godhome.cmd
+!/YiGodhome.sln
+!/docs/
+!/docs/*.md
+!/src/
+!/src/**/
+!/src/**/*.cs
+!/src/**/*.csproj
+!/tests/
+!/tests/**/
+!/tests/**/*.cs
+!/tests/**/*.csproj
+!/tools/
+!/tools/**/
+!/tools/**/*.cs
+!/tools/**/*.csproj
+!/tools/*.ps1
+!/tools/Measure-RadiancePerformance.py
+!/tools/Analyze-HallGarbage.py
+!/tools/effects/*.py
+!/config/
+!/config/*.json
+# Keep generated files excluded even beneath allowed source trees.
+**/bin/
+**/obj/
+**/.vs/
+**/*.dll
+**/*.exe
+**/*.pdb
+**/*.assets
+**/*.sav
+**/*.dat
+/.local/
+
+# Superseded evidence remains local, never reintroduced by the broad source allowlist.
+/docs/archive/
+/docs/*HISTORY*.md
+/docs/STATUS-*.md
+**/*Edit conflict*

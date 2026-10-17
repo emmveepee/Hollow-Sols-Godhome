@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>YiGodhome.SaveGuard</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Foundation/Foundation.csproj" Private="false" />
+    <Reference Include="Mono.Cecil"><HintPath>$(BepCore)/Mono.Cecil.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

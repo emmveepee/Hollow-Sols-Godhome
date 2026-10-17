@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><AssemblyName>YiGodhome.NineSols</AssemblyName></PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DOTween"><HintPath>$(NineSolsManaged)/DOTween.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="Unity.Timeline"><HintPath>$(NineSolsManaged)/Unity.Timeline.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.DirectorModule"><HintPath>$(NineSolsManaged)/UnityEngine.DirectorModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="JSONObject"><HintPath>$(NineSolsManaged)/JSONObject.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(NineSolsManaged)/UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(NineSolsManaged)/Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <ProjectReference Include="../Foundation/Foundation.csproj" Private="false" />
+    <Compile Include="../Shared/HollowSolsMenuPlugin.cs" Link="HollowSolsMenuPlugin.cs" />
+    <Compile Include="../Shared/HollowSolsSessions.cs" Link="HollowSolsSessions.cs" />
+    <Compile Include="../Shared/FailureReporting.cs" Link="FailureReporting.cs" />
+    <Compile Include="../Shared/NativeMenuFixture.cs" Link="NativeMenuFixture.cs" />
+    <Compile Include="../Shared/NativeGameplayFixture.cs" Link="NativeGameplayFixture.cs" />
+    <Compile Include="../Shared/RosterEnduranceFixture.cs" Link="RosterEnduranceFixture.cs" />
+    <Reference Include="UnityEngine.SpriteMaskModule"><HintPath>$(NineSolsManaged)/UnityEngine.SpriteMaskModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="ShapesRuntime"><HintPath>$(NineSolsManaged)/ShapesRuntime.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes"><HintPath>$(NineSolsManaged)/Sirenix.OdinInspector.Attributes.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="barbaro.autoattributes.Runtime"><HintPath>$(NineSolsManaged)/barbaro.autoattributes.Runtime.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="InControl"><HintPath>$(NineSolsManaged)/InControl.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="AK.Wwise.Unity.API"><HintPath>$(NineSolsManaged)/AK.Wwise.Unity.API.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepCore)/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <!-- Unity resolves the installed game's dependencies; don't substitute SDK transitive assemblies. -->
+    <Reference Include="Assembly-CSharp"><HintPath>$(NineSolsManaged)/Assembly-CSharp.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="rcg.rcgmakercore.Runtime"><HintPath>$(NineSolsManaged)/rcg.rcgmakercore.Runtime.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Reference Include="UniTask"><HintPath>$(NineSolsManaged)/UniTask.dll</HintPath><Private>false</Private><ExternallyResolved>true</ExternallyResolved></Reference>
+    <Compile Include="../Shared/DetailedLogging.cs" Link="DetailedLogging.cs" />
+    <Compile Include="../Shared/BaselinePlugin.cs" Link="BaselinePlugin.cs" />
+    <Compile Include="../Shared/HubCombatLifecycle.cs" Link="HubCombatLifecycle.cs" />
+    <Compile Include="../Shared/DiagnosticCompletion.cs" Link="DiagnosticCompletion.cs" />
+    <Compile Include="../Shared/FramePerformance.cs" Link="FramePerformance.cs" />
+    <Compile Include="../Shared/CollisionAudit.cs" Link="CollisionAudit.cs" />
+    <Compile Include="../Geometry/*.cs" Link="Geometry/%(Filename)%(Extension)" />
+    <Compile Include="../Bridge/*.cs" Link="Bridge/%(Filename)%(Extension)" />
+    <Reference Include="BepInEx"><HintPath>$(BepCore)/BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(NineSolsManaged)/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(NineSolsManaged)/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(NineSolsManaged)/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(NineSolsManaged)/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AnimationModule"><HintPath>$(NineSolsManaged)/UnityEngine.AnimationModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.Physics2DModule"><HintPath>$(NineSolsManaged)/UnityEngine.Physics2DModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TilemapModule"><HintPath>$(NineSolsManaged)/UnityEngine.TilemapModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.GridModule"><HintPath>$(NineSolsManaged)/UnityEngine.GridModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule"><HintPath>$(NineSolsManaged)/UnityEngine.ParticleSystemModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(NineSolsManaged)/UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(NineSolsManaged)/UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

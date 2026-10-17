@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework></PropertyGroup>
+  <ItemGroup><Compile Include="../../src/Bridge/*.cs" Link="Bridge/%(Filename)%(Extension)" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/GreyPrinceTitleSource.cs" Link="GreyPrinceTitleSource.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/PureVesselTitleSource.cs" Link="PureVesselTitleSource.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/OwnedMenuDeselect.cs" Link="OwnedMenuDeselect.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/GodhomeRoofAccess.cs" Link="GodhomeRoofAccess.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/EntryFloorAdmission.cs" Link="EntryFloorAdmission.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/NineSols/AirborneEntryLaunch.cs" Link="AirborneEntryLaunch.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/HollowKnight/VerticalEntryGateLease.cs" Link="VerticalEntryGateLease.cs" /></ItemGroup>
+</Project>
