@@ -119,7 +119,7 @@ public sealed partial class HollowSolsMenuPlugin
         var context = reportContext;
         _ = ReportWork(() => { reports.RecordOrderlyExit(reportInstance, context); reports.Disarm(reportInstance); return true; });
     }
-    private void NotifyOrderlyApplicationExit()
+    internal void NotifyOrderlyApplicationExit()
     {
         RecordOrderlyQuitIntent();
         requestedQuit = true;

@@ -43,6 +43,14 @@ internal static class PublicBuildChecks
             if (Array.IndexOf(earlyCalls, "RecordOrderlyQuitIntent") < 0 || Array.IndexOf(earlyCalls, "RecordOrderlyQuitIntent") >= Array.IndexOf(earlyCalls, "CompleteReportShutdown")
                 || !menuPlugin.Methods.Single(m => m.Name == "Awake").Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "add_quitting"))
                 throw new Exception("Orderly exit is not recorded at the early application-quitting event");
+            var gameplayPlugin = types.Single(t => t.Name == "BaselinePlugin");
+            var gameplayQuit = gameplayPlugin.Methods.Single(m => m.Name == "OnApplicationQuit");
+            var teardownCalls = gameplayQuit.Body.Instructions.Where(i => i.Operand is MethodReference).Select(i => ((MethodReference)i.Operand).Name).ToArray();
+            int notification = Array.IndexOf(teardownCalls, "NotifyOrderlyApplicationExit"), disposal = Array.IndexOf(teardownCalls, "Dispose");
+            if (notification < 0 || disposal < 0 || notification >= disposal)
+                throw new Exception("Native gameplay teardown precedes the orderly-exit receipt");
+            if (gameplayPlugin.Methods.Single(m => m.Name == "OnDestroy").Body.Instructions.Any(i => i.Operand is MethodReference m && (m.Name == "NotifyOrderlyApplicationExit" || m.Name == "OnApplicationQuit")))
+                throw new Exception("An ordinary session return can falsely record application exit");
             var orderly = menuPlugin.Methods.Single(m => m.Name == "CompleteReportShutdown");
             if (!orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "DisarmBeforeExit")
                 || orderly.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "Acknowledge"))

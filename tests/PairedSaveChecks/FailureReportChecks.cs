@@ -122,7 +122,14 @@ internal static class FailureReportChecks
             var firstContext = new ReportContext(race, race, link, firstSide, "candidate", "room");
             var secondContext = new ReportContext(race, race, link, secondSide, "candidate", "room");
             firstStore.Arm(firstOwner, firstContext, 123, 456); secondStore.Arm(secondOwner, secondContext, 234, 567);
-            firstStore.RecordOrderlyExit(firstOwner, firstContext);
+            using var allowExitReceipt = new ManualResetEventSlim();
+            Task exitReceipt = Task.Run(() => { allowExitReceipt.Wait(); firstStore.RecordOrderlyExit(firstOwner, firstContext); });
+            try {
+                Need(!firstStore.DisarmBeforeExit(firstOwner, exitReceipt, TimeSpan.Zero), "Teardown advanced before its queued exit receipt");
+            } finally { allowExitReceipt.Set(); }
+            Need(firstStore.DisarmBeforeExit(firstOwner, exitReceipt, TimeSpan.FromSeconds(2)), "Pre-teardown receipt did not finish");
+            // This callback represents channel disposal by the gameplay plugin;
+            // its production quit method must invoke notification before Dispose.
             Need(!secondStore.CapturePeerFailure(secondContext, "VISUAL_CHANNEL_STOPPED", "native shutdown"), "Normal peer teardown became an incident");
             secondStore.RecordOrderlyExit(secondOwner, secondContext);
             Need(!firstStore.CapturePeerFailure(firstContext, "PEER_DISCONNECTED", "both windows closing"), "Rapid simultaneous close became an incident");

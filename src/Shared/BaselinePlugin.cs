@@ -1001,6 +1001,11 @@ public sealed partial class BaselinePlugin : BaseUnityPlugin
 
     private void OnApplicationQuit()
     {
+        // Unity does not order this callback after the menu plugin's callback
+        // or quitting subscriber. Record the real application exit before any
+        // native/service/channel disposal can be observed by the other game.
+        // Never do this in OnDestroy: ordinary session returns destroy us too.
+        HollowSolsMenuPlugin.Instance?.NotifyOrderlyApplicationExit();
 #if HOLLOW_KNIGHT
         configurationMenu?.Dispose(); configurationMenu=null;
         hostFrameProbe?.Dispose(); hostFrameProbe = null;
