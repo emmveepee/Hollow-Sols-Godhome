@@ -39,6 +39,7 @@ internal static class Program
             throw new ArgumentException("Fixture root must be ignored development data.");
         Directory.CreateDirectory(evidence);
         FailureReportChecks.Run(evidence);
+        DeferredReadChecks.Run();
         DefaultPaths(); Isolation(); Faults(); Corruption(); Lifecycle(); Coordinator(); Wire(); Bundles(); MenuControl(); ProcessInterruptions(); NativeContext(); NativeExchange(); ProductionTransport(); LeaseDiagnostics();
         Console.WriteLine("PASS: " + assertions + " assertions; disposable fixture data preserved at " + evidence);
     }

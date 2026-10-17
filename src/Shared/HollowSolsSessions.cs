@@ -61,9 +61,14 @@ public sealed partial class HollowSolsMenuPlugin
     {
 #if HOLLOW_KNIGHT
         ExecuteUI(() => {
-            PairedCheckpoint? loaded = fresh ? null : store!.Load(pair.Slot, pair.Id);
-            if (loaded?.Recovered == true) { menu!.Notice(loaded.RecoveryNotice!, () => StartSelected(pair, false, loaded)); return; }
-            StartSelected(pair, fresh, loaded);
+            if (requestedQuit || activeToken.HasValue || controller?.Lifecycle.State != BridgeState.SaveSelection) return;
+            if (fresh) { StartSelected(pair, true, null); return; }
+            menuPreview = null;
+            var source = store!;
+            menuReads.Begin(controller.Lifecycle.Connection, () => new MenuSaveRead(source) {
+                Pair = pair, Loaded = source.Load(pair.Slot, pair.Id)
+            });
+            menu!.Waiting("Reading Hollow Sols save...");
         });
 #else
         throw new InvalidOperationException("HK selects paired saves.");
@@ -72,6 +77,7 @@ public sealed partial class HollowSolsMenuPlugin
 #if HOLLOW_KNIGHT
     private void StartSelected(SavePair pair, bool fresh, PairedCheckpoint? loaded)
     {
+        InvalidateMenuReads();
         NativePairedGame.RememberVanilla();
         activePair = pair; creating = fresh; generation = loaded?.Generation ?? 0;
         activeToken = controller!.Select(pair, Now, fresh);

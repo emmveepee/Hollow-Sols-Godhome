@@ -6,6 +6,8 @@ The release candidate has been installed locally. A browser-assisted report was 
 
 Next: finish the [release gates](docs/RELEASE-PREPARATION.md) against the exact reviewed candidate. This documentation cleanup changes neither installed binaries nor the private source snapshot; updated source/package staging requires a separate authorized step.
 
+Current release blocker: P17-LINK01 confirms a save-selection disconnect on the official v0.1.0 bytes. Slot/card preparation blocks the control pump beyond its peer-silence window. A local worker-read correction has passed isolated checks; see the acceptance register for evidence and required player testing. Keep GitHub unchanged and public rollout on hold until the corrected candidate is accepted.
+
 **v0.2.0 direction:** [Option C reusable bridge boundaries](docs/ROADMAP.md). No extraction or new destination adapter has been implemented for that plan.
 
 - Players: [README](README.md) → [installation](docs/INSTALLATION.md).

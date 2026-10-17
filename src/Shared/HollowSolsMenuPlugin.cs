@@ -32,6 +32,19 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
     private double nextPassiveRetry;
     private bool requestedQuit, finalizedQuit;
     private double quitDeadline;
+#if HOLLOW_KNIGHT
+    private readonly DeferredRead<MenuSaveRead> menuReads = new DeferredRead<MenuSaveRead>();
+    private MenuSaveRead? menuPreview;
+    private sealed class MenuSaveRead
+    {
+        internal readonly PairedSaveStore Store;
+        internal SlotSummary[]? Slots;
+        internal byte[][]? Previews;
+        internal SavePair? Pair;
+        internal PairedCheckpoint? Loaded;
+        internal MenuSaveRead(PairedSaveStore store) { Store = store; }
+    }
+#endif
 #if !HOLLOW_KNIGHT
     private bool locallyActivated;
     private NativeBridgeAudio? bridgeAudio;
@@ -96,9 +109,56 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         if (!backgroundCaptured) { previousBackground = Application.runInBackground; backgroundCaptured = true; }
         Application.runInBackground = true;
     }
-    internal void ShowSlots() => ExecuteUI(() => { if (store != null) menu?.Slots(store.ListSlots()); });
+    internal void ShowSlots() => ExecuteUI(() => {
 #if HOLLOW_KNIGHT
-    internal byte[] PreviewSave(SlotSummary slot) => store!.Load(slot.Slot, slot.Pair!.Id).HollowKnight;
+        if (requestedQuit || activeToken.HasValue || controller?.Lifecycle.State != BridgeState.SaveSelection) return;
+        menuPreview = null;
+        var root = SaveRoot; var existing = store;
+        Action<string>? trace = fixtureId == Guid.Empty ? null : Log;
+        menuReads.Begin(controller.Lifecycle.Connection, () => {
+            var source = existing ?? new PairedSaveStore(root, leaseTrace: trace);
+            var slots = source.ListSlots(); var previews = new byte[slots.Length][];
+            for (int i = 0; i < slots.Length; i++) {
+                var slot = slots[i];
+                if (slot.Pair != null && (slot.Condition == SlotCondition.Ready || slot.Condition == SlotCondition.RecoveryAvailable))
+                    previews[i] = source.Load(slot.Slot, slot.Pair.Id).HollowKnight;
+            }
+            return new MenuSaveRead(source) { Slots = slots, Previews = previews };
+        });
+        menu?.Waiting("Reading Hollow Sols saves...");
+#endif
+    });
+#if HOLLOW_KNIGHT
+    internal byte[] PreviewSave(SlotSummary slot)
+    {
+        int index = slot.Slot.Number - 1;
+        if (menuPreview?.Slots == null || !ReferenceEquals(menuPreview.Slots[index], slot) || menuPreview.Previews?[index] == null)
+            throw new InvalidOperationException("This save preview has been retired.");
+        return menuPreview.Previews[index];
+    }
+    private void UpdateMenuReads()
+    {
+        if (requestedQuit || activeToken.HasValue || controller?.Lifecycle.State != BridgeState.SaveSelection) {
+            InvalidateMenuReads(); return;
+        }
+        if (!menuReads.Poll(controller.Lifecycle.Connection, out var read)) return;
+        store = read!.Store;
+        if (read.Slots != null) {
+            menuPreview = read; menu!.Slots(read.Slots);
+            Log("PAIRED_MENU_READ_READY slots=" + read.Slots.Length + " workerIO=True");
+        } else {
+            var pair = read.Pair!; var loaded = read.Loaded!;
+            long version = menuReads.Version; Guid connection = controller.Lifecycle.Connection;
+            Action start = () => ExecuteUI(() => {
+                if (requestedQuit || activeToken.HasValue || menuReads.Version != version
+                    || controller.Lifecycle.State != BridgeState.SaveSelection || controller.Lifecycle.Connection != connection) return;
+                StartSelected(pair, false, loaded);
+            });
+            if (loaded.Recovered) menu!.Notice(loaded.RecoveryNotice!, start);
+            else start();
+        }
+    }
+    private void InvalidateMenuReads() { menuReads.Cancel(); menuPreview = null; }
 #endif
     internal void CancelBridge()
     {
@@ -113,12 +173,18 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         }
 #endif
         if(requestedQuit || activeToken.HasValue)return; // Ignore a retired menu's queued Back event.
+#if HOLLOW_KNIGHT
+        InvalidateMenuReads();
+#endif
         if (controller?.Lifecycle.State == BridgeState.SaveSelection || controller?.Lifecycle.State == BridgeState.Connected) { menu?.Close(); return; }
         DisarmReports(); controller?.Fail("Connection cancelled."); transport?.Dispose(); transport = null; RestoreVanillaMenu();
     }
     internal void SelectSlot(SlotSummary slot)
     {
         if(requestedQuit || activeToken.HasValue || controller?.Lifecycle.State!=BridgeState.SaveSelection)return;
+#if HOLLOW_KNIGHT
+        if (menuReads.Busy) return;
+#endif
         ExecuteUI(() => {
             if (controller?.Lifecycle.State != BridgeState.SaveSelection || activeToken.HasValue) throw new InvalidOperationException("Finish the current paired session before selecting a slot.");
             if (slot.Condition == SlotCondition.Empty) menu!.Modes(choice => ExecuteUI(() => BeginSelectedSlot(store!.ReserveCreation(slot.Slot, choice), true)));
@@ -128,6 +194,10 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
     }
     internal void ConfirmDelete(SlotSummary slot)
     {
+        if (requestedQuit || activeToken.HasValue || controller?.Lifecycle.State != BridgeState.SaveSelection) return;
+#if HOLLOW_KNIGHT
+        if (menuReads.Busy) return;
+#endif
         if (slot.Condition == SlotCondition.Empty) return;
         ExecuteUI(() => {
         var confirmation = store!.PrepareDeletion(slot.Slot);
@@ -203,6 +273,9 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
                 controller.Tick(Now);
                 if (controller.Lifecycle.State == BridgeState.Failed) throw new IOException(controller.Lifecycle.Failure);
             }
+#if HOLLOW_KNIGHT
+            UpdateMenuReads();
+#endif
         }
         catch (Exception error) { Fail(error); }
     }
@@ -219,8 +292,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
         if (pendingVanilla && activeToken == null && (controller.Lifecycle.State == BridgeState.SaveSelection || controller.Lifecycle.State == BridgeState.Connected)) { BeginDisconnect(); return; }
         if (controller.Lifecycle.State == BridgeState.SaveSelection)
         {
-            store ??= new PairedSaveStore(SaveRoot, leaseTrace: fixtureId == Guid.Empty ? null : Log);
-            menu!.Slots(store.ListSlots());
+            ShowSlots();
         }
         else if (controller.Lifecycle.State == BridgeState.Connected) {
             menu!.Waiting("Bridge connected. Waiting for Hollow Knight to select a save...");
@@ -233,6 +305,9 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
     partial void HandleNativeOperation(ControlMessage message);
     private void Fail(Exception error)
     {
+#if HOLLOW_KNIGHT
+        InvalidateMenuReads();
+#endif
 #if !HOLLOW_KNIGHT
         RestoreFixtureBindings();
 #endif
@@ -268,6 +343,9 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
     partial void UpdateMenuFixture();
     internal void RestoreVanillaMenu()
     {
+#if HOLLOW_KNIGHT
+        InvalidateMenuReads();
+#endif
         DisarmReports();
         transport?.Dispose(); transport = null;
         if (controller?.Lifecycle.State == BridgeState.Failed || controller?.Lifecycle.State == BridgeState.Disconnecting)
@@ -286,6 +364,7 @@ public sealed partial class HollowSolsMenuPlugin : BaseUnityPlugin
     private void OnDestroy()
     {
 #if HOLLOW_KNIGHT
+        InvalidateMenuReads();
         enduranceHooks?.UnpatchSelf();enduranceHooks=null;
 #endif
 #if !HOLLOW_KNIGHT

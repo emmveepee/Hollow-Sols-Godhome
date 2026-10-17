@@ -636,6 +636,12 @@ public sealed partial class HollowSolsMenuPlugin
             return;
         }
         if (Now >= fixtureSeconds) { Log("NATIVE_MENU_FIXTURE_TIMEOUT stage=" + fixtureStage); Application.Quit(); return; }
+#if HOLLOW_KNIGHT
+        // A connected control channel precedes asynchronous save-card readiness.
+        // Keep the fixture's existing overall deadline, but do not click or read
+        // the store while its menu read still owns the lease.
+        if (controller!.Lifecycle.State == BridgeState.SaveSelection && menuReads.Busy) return;
+#endif
         if ((fixtureScenario == "menus" || fixtureScenario.StartsWith("vanilla-", StringComparison.Ordinal)) && fixtureStage == 99) {
             string counterpart = Path.Combine(Path.GetDirectoryName(fixtureFolder)!, Side == GameSide.HollowKnight ? "NineSols" : "HollowKnight", "menu-fixture.complete");
             if (File.Exists(counterpart) && File.ReadAllText(counterpart) == fixtureId.ToString()) Application.Quit();

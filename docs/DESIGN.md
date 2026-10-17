@@ -51,6 +51,8 @@ Native title controllers must be queried without creating missing singleton inst
 
 Initial save loading uses the native-style Bridging Yi caption and once-per-load inspection. Native scene transitions and statue sit/meditate/stand remain native-timed. Prepare images before reveal; never extend a fade to conceal late work. Controls borrows the real NS UI and capture/validation/settings logic while both games pause. Keyboard/mouse rebinding uses scoped host input leases; it must not leak into gameplay. Menus use each game's native styling and restore borrowed state at teardown.
 
+HK slot enumeration, checkpoint preview reads and selected-save validation run on a bounded file-read worker (`DeferredRead`); the game thread continues pumping control traffic while the native menu displays a waiting caption. Native parsing, card construction, recovery warnings and session adoption remain on the game thread. At most one read runs and one replacement waits; cancellation, connection identity and request generation retire stale results without interrupting store leases. Preview bytes are scoped to the displayed slot objects; selected saves are validated again before loading. This does not change the peer-silence deadline, protocol or save formats.
+
 ## Saves and checkpoint ownership
 
 Exactly four logical pairs live in the mod namespace, normally `%LOCALAPPDATA%/HollowSols/paired/HollowSols`. Previously initialized namespaces stay put. HK profile4 and NS index3 are private serializer contexts, not aliases for the four logical slots or permission to modify vanilla saves. Creation initializes upgraded Yi once; loading restores saved choices. Failed native loading must not fabricate a fresh baseline.

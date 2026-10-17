@@ -15,6 +15,9 @@ internal static class PublicBuildChecks
             var types = assembly.MainModule.Types;
             if (assembly.Name.Version != new Version(0, 1, 0, 0)) throw new Exception("Public assembly version differs from v0.1.0");
             var menuPlugin = types.Single(t => t.Name == "HollowSolsMenuPlugin");
+            foreach (var method in menuPlugin.Methods.Where(m => m.HasBody && new[] { "StateChanged", "PreviewSave", "BeginSelectedSlot", "ShowSlots" }.Contains(m.Name)))
+                if (method.Body.Instructions.Any(i => i.Operand is MethodReference call && call.DeclaringType.FullName == "HollowSols.Foundation.PairedSaveStore" && (call.Name == "Load" || call.Name == "ListSlots")))
+                    throw new Exception("Save menu blocks the game-thread control pump: " + method.Name);
             var pluginDeclaration = menuPlugin.CustomAttributes.Single(a => a.AttributeType.FullName == "BepInEx.BepInPlugin");
             if (!Equals(pluginDeclaration.ConstructorArguments[2].Value, "0.1.0")) throw new Exception("Public menu plugin version differs from v0.1.0");
             var repository = types.Single(t => t.FullName == "YiGodhome.Bridge.BuildFeatures").Fields.Single(f => f.Name == "ReportRepository");
