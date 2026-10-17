@@ -1,6 +1,6 @@
 # Contributing to Hollow Sols
 
-Hollow Sols is pre-v0.1. Read [AGENTS.md](AGENTS.md), [STATUS](STATUS.md), the [documentation map](docs/DOCUMENTATION.md), and the [canonical issue register](docs/ROSTER-COMPLETION.md) before changing behavior. A build or synthetic check does not establish native gameplay or player acceptance.
+Hollow Sols is preparing v0.1.0. Read [AGENTS.md](AGENTS.md), [STATUS](STATUS.md), the [documentation map](docs/DOCUMENTATION.md), and the [canonical issue register](docs/ROSTER-COMPLETION.md) before changing behavior. A build or synthetic check does not establish native gameplay or player acceptance.
 
 ## License and provenance
 
@@ -55,4 +55,4 @@ BridgeChecks locks selected gameplay/input/audio and hit-ack bytes against indep
 
 ## Review and release boundaries
 
-Keep changes small, explain the concrete behavior and validation scope, and preserve unrelated working-tree edits. No universal gameplay model, new destination adapter, save migration or runtime extraction is part of the current release-preparation work. Native boss selection remains unrestricted. Review staged paths before any commit; publishing, tagging and pushing require separate authorization. Use the proposed allowlist in RELEASE-PREPARATION rather than archiving a working directory.
+Keep changes small, explain the concrete behavior and validation scope, and preserve unrelated working-tree edits. Option C extraction is planned for v0.2.0 in [ROADMAP](docs/ROADMAP.md), not part of v0.1.0 preparation. Native boss selection remains unrestricted. Review staged paths before any commit; publishing, tagging and pushing require separate authorization. Use the proposed allowlist in RELEASE-PREPARATION rather than archiving a working directory.

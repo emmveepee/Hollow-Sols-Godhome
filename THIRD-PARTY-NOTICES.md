@@ -1,6 +1,6 @@
 # Third-party inventory and notices
 
-Original project-owned material is offered under **GPL-3.0-or-later**; see [LICENSE](LICENSE). Third-party materials retain their own terms. This preliminary inventory grants no rights to games, commercial libraries or extracted resources. An October16 private friend playtest bundle was explicitly authorized; no public release has been published. Its loader release archive was authenticated byte-for-byte and pinned upstream sources/notices were included; see docs/RELEASE-PREPARATION.md for scope and remaining review.
+Original project-owned material is offered under **GPL-3.0-or-later**; see [LICENSE](LICENSE). Third-party materials retain their own terms. This preliminary inventory grants no rights to games, commercial libraries or extracted resources. The initial public candidate keeps loader binaries external. See [release preparation](docs/RELEASE-PREPARATION.md) for distribution boundaries and remaining review.
 
 ## Loader inventory — October 15, 2026
 

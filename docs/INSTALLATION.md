@@ -25,7 +25,7 @@ The verifier only reads listed installation files and hashes. It never loads gam
 
 ## Start and report problems
 
-Start both games normally through Steam. Choose Hollow Sols Bridge in a ready main menu; the other game must reach its native menu too. Hollow Knight manages four isolated mod-owned paired slots; Nine Sols follows. Never import or replace vanilla/development saves. Godhome is the primary scope; Classic/Steel Soul remain experimental and all 44 listed boss encounters are player-approved Complete as of October17. Full Pantheon sequences, every difficulty/binding and recovery remain separately scoped.
+Start both games normally through Steam. Choose Hollow Sols Bridge in a ready main menu; the other game must reach its native menu too. Hollow Knight manages four isolated mod-owned paired slots; Nine Sols follows. Never import or replace vanilla/development saves. Godhome is the primary scope; Classic/Steel Soul remain experimental. The source acceptance register owns the approved roster and remaining validation limits.
 
 Public builds have no F9 debug menu or detailed-capture activation. Unexpected bridge-failure notices offer Prepare Bug Report. Inspect the prepared ZIP, attach it to the prefilled GitHub issue, describe what happened and submit. No logs are automatically uploaded. The private staging repository requires tester access. Existing explicitly empty Support.RepositoryUrl settings remain empty; set that key in each game's local.hollowsols.menu.hk.cfg / local.hollowsols.menu.ns.cfg to https://github.com/emmveepee/Hollow-Sols-Godhome if needed, then restart. Source docs/BUG-REPORTING.md describes local fallbacks.
 
@@ -45,4 +45,4 @@ Paired saves and logs remain under their existing application locations. **Do no
 
 ## Source and known limits
 
-SOURCE.zip contains the exact project-owned source identified by BUILD-INFO.json. Original material is GPL-3.0-or-later; third-party terms remain separate. See LICENSE and THIRD-PARTY-NOTICES.md. Native installation, disconnect/recovery, clean-machine builds and real browser-assisted submission still need validation. The source's STATUS.md and docs/ROSTER-COMPLETION.md retain current known limitations and player acceptance; access to a fight does not certify support.
+SOURCE.zip contains the exact project-owned source identified by BUILD-INFO.json. Original material is GPL-3.0-or-later; third-party terms remain separate. See LICENSE and THIRD-PARTY-NOTICES.md. See the matching source docs/ROSTER-COMPLETION.md for current acceptance and remaining validation, and docs/RELEASE-PREPARATION.md for release gates. A local installation/reporting sample does not establish clean-machine reproduction or complete save recovery.

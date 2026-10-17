@@ -1,48 +1,28 @@
 # Hollow Sols — Yi in Godhome
 
-Bring Yi from **Nine Sols** into **Hollow Knight's Godhome**, using both real games running locally. Nine Sols owns Yi's movement, combat, health and abilities; Hollow Knight owns its world, bosses, hazards and encounters.
+Play Yi from **Nine Sols** in **Hollow Knight's Godhome**, with both real games running locally. Nine Sols simulates Yi; Hollow Knight runs its world and bosses. This is an offline, single-player mod for Windows.
 
-This is an experimental, offline, single-player mod. **v0.1.0 is being prepared; no public release is available yet.** Compiling the source does not establish native gameplay or release readiness.
+**v0.1.0 is being prepared for release.** See the [accepted roster and known limitations](docs/ROSTER-COMPLETION.md). The current boss roster is playable and satisfactory; future tweaks will follow playtest and balancing feedback.
 
-## Requirements
+## Install and play
 
-- Legitimate Windows installations of **both games**, with normal Steam authentication.
-- The supported game assemblies listed by `src/SaveGuard/Patcher.cs`; other builds have not been verified.
-- BepInEx **5.4.23.5**, separately provisioned for each game. Game files and assets are not included in this repository.
-- For source builds: .NET SDK **9.0.316** and the prerequisites in [CONTRIBUTING](CONTRIBUTING.md).
+You need legitimate Steam installations of both games, the supported native builds checked by the mod, and **BepInEx 5.4.23.5 Windows x64** installed separately for each game. Game files and assets are not included. Follow the [installation, verification and removal guide](docs/INSTALLATION.md); source-build prerequisites are in [CONTRIBUTING](CONTRIBUTING.md).
 
-Candidate installation/removal instructions are in [INSTALLATION](docs/INSTALLATION.md); native installation and release acceptance remain pending. Do not treat older private-playtest update ZIPs as standalone public installers. Contributor build and deployment steps are separate operations.
+1. Launch both games normally through Steam and let both reach their main menus.
+2. Choose **Hollow Sols Bridge** in either game. The other ready menu joins the handshake.
+3. Select or create a Hollow Sols paired slot in Hollow Knight; Nine Sols follows its session commands.
+4. Use native Godhome selection to choose a fight. Yi's controls can be configured through **Nine Sols Controls** in Hollow Knight's pause menu.
 
-## How it works
-
-Launch both games normally through Steam. In a ready main menu, choose **Hollow Sols Bridge**; the counterpart must reach its own native menu before save selection can continue. The optional developer `Start Yi in Godhome.cmd` launcher requires local deployment receipts; downloaded packages use normal Steam launching.
-
-Hollow Knight manages **four isolated mod-owned paired save slots**. Nine Sols follows its session commands. Vanilla and previous development saves remain separate and are never migrated into those pairs. Paired checkpoints synchronize when Hollow Knight saves; recovery must preserve original data and show a warning.
-
-Godhome, Hall of Gods and practical Pantheon encounters are the primary scope. Classic and Steel Soul launching remain experimental behind their warning. The player approved all 44 listed boss encounters as Complete on October17, 2026, with no major issues. This does not certify every difficulty/binding, full Pantheon sequences, modes or recovery; see the canonical roster.
-
-Yi's bindings come from the real **Nine Sols Controls** screen, exposed through Hollow Knight's pause menu. Both games pause while it is open. For current validation and known limitations, read [STATUS](STATUS.md), [boss compatibility](docs/BOSS-COMPATIBILITY.md) and the [canonical issue/player-acceptance register](docs/ROSTER-COMPLETION.md). An incomplete fight is not automatically blocked from selection.
+Hollow Sols uses four separate mod-owned save pairs. Do not copy vanilla or old development saves into them. Godhome is the primary scope; Classic and Steel Soul remain experimental. Full Pantheon sequences, bindings and other validation limits are listed in the acceptance register.
 
 ## Report a problem
 
-Public builds contain **no F9 debug menu or detailed-capture activation**. Ordinary bounded failure/performance logs remain available.
+On an unexpected bridge failure, choose **Prepare Bug Report**. Inspect the diagnostic ZIP, attach it to the prefilled GitHub issue, describe what happened, then submit. Wait for GitHub to finish uploading and show the attachment link before submitting. Preparing the report never uploads it automatically.
 
-On an unexpected bridge failure, choose **Prepare Bug Report**. It prepares a sanitized diagnostic ZIP, reveals it locally and opens a prefilled [GitHub issue](https://github.com/emmveepee/Hollow-Sols-Godhome/issues/new/choose) when reporting is configured. **Attach the ZIP, describe what happened, then submit.** Preparing a report does not upload anything. Inspect attachments before sharing.
+Public builds retain ordinary bounded logs but have no F9 debug menu or detailed-capture activation. For configuration, privacy and local fallbacks, see [bug reporting](docs/BUG-REPORTING.md). For other feedback, use [GitHub Issues](https://github.com/emmveepee/Hollow-Sols-Godhome/issues). During private staging, repository access is required.
 
-New public configurations default to this repository. Existing settings are preserved; development configurations remain unconfigured by default. While the repository is private, testers need repository access. Export/browser failures have local fallbacks, and reporting never replaces safe session cleanup. See [report configuration, privacy and recovery](docs/BUG-REPORTING.md).
+## Development and license
 
-## Development
+Start with [CONTRIBUTING](CONTRIBUTING.md) and the [documentation map](docs/DOCUMENTATION.md). The [v0.2.0 roadmap](docs/ROADMAP.md) describes the planned reusable bridge architecture.
 
-Start with [CONTRIBUTING](CONTRIBUTING.md) and the [documentation map](docs/DOCUMENTATION.md). Native tests and deployment require their own save-safe scope; ordinary builds and isolated checks do not launch games. Development builds retain bounded F9 tools that are excluded from public builds.
-
-- [Architecture and wire contracts](docs/DESIGN.md)
-- [Paired-save foundation](docs/PRE-V01-FOUNDATION.md)
-- [Validation scope](docs/COVERAGE.md) and [performance evidence](docs/PERFORMANCE.md)
-- [Release preparation and remaining gates](docs/RELEASE-PREPARATION.md)
-- [Technical sources](docs/SOURCES.md) and [third-party notices](THIRD-PARTY-NOTICES.md)
-
-## License
-
-Original project-owned source, tests, scripts and documentation use **GNU GPL version 3 or, at your option, any later version** (`GPL-3.0-or-later`), except material identified under its own terms. See [LICENSE](LICENSE) and [THIRD-PARTY-NOTICES](THIRD-PARTY-NOTICES.md).
-
-This grants no rights to proprietary games, installed dependencies or extracted material. Hollow Sols is provided without warranty. Provenance, third-party integration and distribution questions remain release gates.
+Original project-owned material is **GPL-3.0-or-later**: GNU GPL version 3 or, at your option, any later version. See [LICENSE](LICENSE) and [third-party notices](THIRD-PARTY-NOTICES.md). Game content and third-party dependencies retain their own rights and terms. The software is provided without warranty.
