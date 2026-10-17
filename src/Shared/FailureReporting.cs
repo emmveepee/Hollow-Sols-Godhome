@@ -157,8 +157,7 @@ public sealed partial class HollowSolsMenuPlugin
                 bool copied = false;
                 try { GUIUtility.systemCopyBuffer = text; copied = true; } catch (Exception) { /* Visible path and Explorer remain available. */ }
                 string caption = copied ? "Report ready. Attach this ZIP, describe what happened, then submit. "
-                    + (issue == null ? "GitHub submission is unavailable until a repository is configured. " : "Your browser was requested to open the issue form. ")
-                    + "Full instructions and the ZIP path are copied to your clipboard. If Explorer or your browser did not open, paste that text to use the paths/links manually." : text;
+                    + (issue == null ? "GitHub submission is unavailable until a repository is configured." : "Your browser was requested to open the issue form.") : text;
                 menu?.Notice(caption, reportContinue ?? RestoreVanillaMenu);
             }
         }

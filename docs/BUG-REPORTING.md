@@ -24,6 +24,8 @@ Only an HTTPS github.com repository URL with exactly owner/repository is accepte
 
 ## Player flow
 
+The copied-clipboard success notice ends after the short browser/configuration status. Full ZIP paths and fallback instructions remain on the clipboard, avoiding native dialog clipping. Clipboard-unavailable fallback retains its existing visible instructions.
+
 After an unexpected link/session failure, the surviving game's existing native notice offers **Prepare Bug Report** and **Continue**. An unsafe native-return timeout retains **Close Game** instead of offering a gameplay continuation. Report export is optional and independent of committed-save preservation, native teardown and quit deadlines.
 
 Press Prepare Bug Report, wait for the bounded local snapshot/export, then **attach this ZIP, describe what happened, then submit** in the opened GitHub form. Explorer selects the ZIP and full instructions/path/issue link are copied to the clipboard when available. Browser/Explorer failures retain manual paths/links in those instructions; if the clipboard is unavailable, the dialog shows them directly. Export failure offers retry; an export exceeding ten seconds offers a safe continuation while preserving available evidence. No files are uploaded or issues submitted by the game. GitHub sign-in, attachment and submission remain deliberate browser actions; the form cannot enforce that a ZIP was attached.
