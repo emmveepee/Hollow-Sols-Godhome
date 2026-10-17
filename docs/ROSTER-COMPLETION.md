@@ -66,6 +66,7 @@ These are validation gaps or scoped follow-ups, not evidence that accepted fight
 
 | Area / historical lookup | Present evidence and next action |
 | --- | --- |
+| Jades | Yi starts fully upgraded, but not every jade has been tested. Some may behave incorrectly or fail entirely. Player approval of the boss roster does not establish compatibility of every jade/loadout. Use new playtest reports to identify specific failures. |
 | Save safety and failure recovery | Paired store/recovery has synthetic coverage and earlier scoped native samples. Verify the final candidate's committed checkpoint, visible warning, cleanup/menu return and reload after an unexpected failure using isolated existing paired copies. Successful report export does not establish successful recovery. |
 | Remaining reporting variants (P17-REL01) | Synthetic coverage includes missing logs, redaction, bounds, locks, interrupted/repeated export, restart and launcher failures. The native submitted-report sample does not establish every role/failure/restart/offline variant. Scope remaining tests to those gaps. |
 | Reconnect/cancel/late load (P16-LC01–03) | Reconnect fixes and bounded repeated-load/native cancellation samples exist; physical timing, vanilla-selection return and further same-process reloads remain separately scoped. Preserve drain/service readiness; do not label this missing implementation. |

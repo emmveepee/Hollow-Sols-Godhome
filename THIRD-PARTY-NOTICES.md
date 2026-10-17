@@ -44,6 +44,8 @@ These pinned repositories are technical references, not vendored runtime depende
 
 ## Ownership and distribution questions
 
+The README banner and gameplay screenshots are creator-supplied documentation media. They depict material from Hollow Knight and Nine Sols; the project code license does not grant rights to the underlying game artwork. Their inclusion is not a reusable game-asset distribution or a claim that this inventory establishes the banner's authorship or third-party permissions.
+
 The project license covers only original material whose rights contributors can grant. API/FSM/type identifiers, donor manifests and authored adapters do not claim ownership of game content. Confirm provenance of adapted source and inspect the current tree and history for copied/decompiled material. Prior documentation statements are evidence, not copyright clearance.
 
 Review proprietary linking/integration, both games' terms and GPL compatibility before public distribution. No special linking permission, automatic exception or legal conclusion is supplied. [Release preparation](docs/RELEASE-PREPARATION.md) records the proposed allowlist and unresolved gates.

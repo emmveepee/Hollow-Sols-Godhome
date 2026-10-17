@@ -17,6 +17,11 @@
 !/YiGodhome.sln
 !/docs/
 !/docs/*.md
+!/docs/media/
+!/docs/media/hollow-sols-banner.png
+!/docs/media/yi-root-node.png
+!/docs/media/yi-pure-vessel.png
+!/docs/media/yi-absolute-radiance.png
 !/src/
 !/src/**/
 !/src/**/*.cs
