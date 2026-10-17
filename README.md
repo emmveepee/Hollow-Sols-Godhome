@@ -19,7 +19,7 @@ Launch both games normally through Steam. In a ready main menu, choose **Hollow 
 
 Hollow Knight manages **four isolated mod-owned paired save slots**. Nine Sols follows its session commands. Vanilla and previous development saves remain separate and are never migrated into those pairs. Paired checkpoints synchronize when Hollow Knight saves; recovery must preserve original data and show a warning.
 
-Godhome, Hall of Gods and practical Pantheon encounters are the primary scope. Classic and Steel Soul launching remain experimental behind their warning. Full encounter, Pantheon, mode and recovery support must not be inferred from access to a menu or a successful build.
+Godhome, Hall of Gods and practical Pantheon encounters are the primary scope. Classic and Steel Soul launching remain experimental behind their warning. The player approved all 44 listed boss encounters as Complete on October17, 2026, with no major issues. This does not certify every difficulty/binding, full Pantheon sequences, modes or recovery; see the canonical roster.
 
 Yi's bindings come from the real **Nine Sols Controls** screen, exposed through Hollow Knight's pause menu. Both games pause while it is open. For current validation and known limitations, read [STATUS](STATUS.md), [boss compatibility](docs/BOSS-COMPATIBILITY.md) and the [canonical issue/player-acceptance register](docs/ROSTER-COMPLETION.md). An incomplete fight is not automatically blocked from selection.
 

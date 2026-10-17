@@ -1,5 +1,7 @@
 # Boss compatibility — current interpretation
 
+October17, 2026 player approval: **all 44 listed encounters are Complete**, fully functional with no major issues. This supersedes the October13/partial-retest grades and conflicting pending whole-fight acceptance. It does not certify unreported difficulties/bindings, complete Pantheon sequences, experimental modes, physical menu rebinding, failure reporting or save recovery. Earlier per-issue source/native evidence remains historical; do not infer a new source fix or reopen accepted fights from old pending text. See [canonical roster](ROSTER-COMPLETION.md#whole-fight-player-acceptance).
+
 P17-REL01 adds a public profile without developer controls and optional failure-report export. It changes no boss mechanics, gameplay schemas or fight acceptance; see [BUG-REPORTING](BUG-REPORTING.md) for offline/native validation boundaries.
 
 P17-UI02 mouse hover/click and Esc are player verified; P17-UI03 keyboard no-switch rebinding is also player verified. Mouse rebinding now uses requested host button/wheel snapshots in the native listener scope; corrected mouse no-switch retest pending. No encounter acceptance change; current gameplay52/visual15.

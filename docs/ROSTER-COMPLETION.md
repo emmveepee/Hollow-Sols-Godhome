@@ -1,6 +1,10 @@
-# Canonical issue and player-acceptance register — October 13, 2026
+# Canonical issue and player-acceptance register — October 17, 2026
 
 This is the **only current per-issue status table**. STATUS is a short projection; other documents explain contracts or dated evidence. Historical “OPEN”, “complete”, failed attempts and old protocol numbers cannot override this register. New player reports supersede the affected rows; do not reopen unrelated historical work.
+
+## Current player approval — October17
+
+October17, 2026 player approval: **all 44 listed encounters are Complete**, fully functional with no major issues. This supersedes the October13/partial-retest grades and conflicting pending whole-fight acceptance. It does not certify unreported difficulties/bindings, complete Pantheon sequences, experimental modes, physical menu rebinding, failure reporting or save recovery. Earlier per-issue source/native evidence remains historical; do not infer a new source fix or reopen accepted fights from old pending text.
 
 ## How to read the states
 
@@ -12,7 +16,7 @@ This is the **only current per-issue status table**. STATUS is a short projectio
 | PARTIAL | Only part of the reported problem is corrected. Remaining symptom/visual quality awaits the specified player evidence; not a full fix. |
 | APPLICABILITY UNCONFIRMED | The player suspected a family issue. Do not turn suspicion into a confirmed defect or acceptance claim. |
 
-All P13 cases below await the player's current retest. Their original OPEN acceptance has **not** been converted into a claim of a completed fight. Only the boss table records whole-fight player acceptance.
+The October17 approval and whole-fight table below are current. Older P13/P14/P15/P16 fight-specific OPEN, Incomplete or awaiting-player wording is superseded for functional whole-fight acceptance. Retain the evidence and native contracts; menu, persistence, reporting and independently scoped tests remain distinct.
 
 ## Current validation arrangement
 
@@ -198,44 +202,54 @@ The requested-behavior column preserves the player's requirements; the final col
 
 ## Whole-fight player acceptance
 
-The latest partial retest demoted Gruz Mother. Eleven explicitly accepted fights stay accepted. Broken Vessel and Dung Defender keep the player's uncertainty. Omitted encounters retain historical evidence without fresh acceptance or automatic new tasks.
+October17, 2026 player approval: **all 44 listed encounters are Complete**, fully functional with no major issues. This supersedes the October13/partial-retest grades and conflicting pending whole-fight acceptance. It does not certify unreported difficulties/bindings, complete Pantheon sequences, experimental modes, physical menu rebinding, failure reporting or save recovery. Earlier per-issue source/native evidence remains historical; do not infer a new source fix or reopen accepted fights from old pending text.
 
-| Boss | Player status | Current corrections |
-|---|---|---|
-| Gruz Mother | Incomplete | P13-G02/G08/GM01; follow-up rejects earlier acceptance. |
-| Vengefly King | Complete | Preserve accepted fight. |
-| False Knight | Incomplete | P13-FK01–02 |
-| Failed Champion | Incomplete | P13-FC01–03 |
-| Hornet Protector | Complete | Preserve accepted fight. |
-| Hornet Sentinel | Incomplete | P13-HS01–02 |
-| Moss Charger / Massive Moss Charger | Complete | Preserve accepted fight. |
-| Flukemarm | Incomplete | P13-FL01 |
-| Mantis Lords | Complete | Preserve accepted fight. |
-| Sisters of Battle | Complete | Preserve accepted fight and shared explosion reference. |
-| Oblobble / Oblobbles | Complete | Preserve accepted fight. |
-| Hive Knight | Complete | Preserve accepted fight. |
-| Broken Vessel | Incomplete? | P13-BV01; possible family issue, unconfirmed. |
-| Lost Kin | Incomplete | P13-LK01; P14-LK02. P14-LK03 resolved by native-moveset clarification. |
-| Nosk | Incomplete | P13-NO01–04 |
-| Winged Nosk | Status not supplied; defects reported | P13-WN01–04 |
-| The Collector | Incomplete | P13-CO01–02 |
-| God Tamer | Incomplete | P13-GT01 |
-| Crystal Guardian | Incomplete | Latest player reopens counter-stun presentation; shared correction P13-EG01. |
-| Enraged Guardian | Incomplete | P13-EG01 |
-| Uumuu | Previously accepted; global minion HUD follow-up pending | Player accepts P16-UU01 shielded attachment/Full Control correction. New low-resolution minion HP report is scoped to global P16-UI04. Retain historical P15-UU02 stall evidence without claiming its exact cause proven; shared wall art stays P15-VIS02. |
-| Traitor Lord | Status not supplied; defects reported | P13-TL01–02 |
-| Grey Prince Zote | Incomplete | P13-ZO01–03 |
-| Soul Warrior | Status not supplied; defects reported | P13-SW01 |
-| Soul Master | Status not supplied; defects reported | P13-SM01–02 |
-| Soul Tyrant | Status not supplied; defects reported | P13-SY01–02 |
-| Dung Defender | Incomplete? | P13-DD01; lever separately P13-G05. |
-| White Defender | Status not supplied; defect reported | P13-WD01 |
-| Watcher Knights | Complete | Preserve accepted fight. |
-| No Eyes | Complete | No current notch-removal task; older correction is historical. |
-| Marmu | Incomplete | P13-MA01 |
-| Xero | Incomplete | P13-XE01 |
-
-Eleven fights are explicitly Complete. Markoth, Paintmaster Sheo, Grimm, Nightmare King Grimm, Brooding Mawlek, Gorb, Galien, Elder Hu, Brothers Oro & Mato, Nailsage Sly, Pure Vessel and other unlisted encounters retain historical evidence only for this report. Do not infer new acceptance, rejection or renewed tasks for them. Absolute Radiance's newly reported statue issue is P13-G01; this report does not certify that fight or a Pantheon clear.
+| Boss | Player status | Evidence |
+| --- | --- | --- |
+| Gruz Mother | Complete | User-approved roster, October17, 2026. |
+| Vengefly King | Complete | User-approved roster, October17, 2026. |
+| Brooding Mawlek | Complete | User-approved roster, October17, 2026. |
+| False Knight | Complete | User-approved roster, October17, 2026. |
+| Failed Champion | Complete | User-approved roster, October17, 2026. |
+| Hornet Protector | Complete | User-approved roster, October17, 2026. |
+| Hornet Sentinel | Complete | User-approved roster, October17, 2026. |
+| Moss Charger / Massive Moss Charger | Complete | User-approved roster, October17, 2026. |
+| Flukemarm | Complete | User-approved roster, October17, 2026. |
+| Mantis Lords | Complete | User-approved roster, October17, 2026. |
+| Sisters of Battle | Complete | User-approved roster, October17, 2026. |
+| Oblobble / Oblobbles | Complete | User-approved roster, October17, 2026. |
+| Hive Knight | Complete | User-approved roster, October17, 2026. |
+| Broken Vessel | Complete | User-approved roster, October17, 2026. |
+| Lost Kin | Complete | User-approved roster, October17, 2026. |
+| Nosk | Complete | User-approved roster, October17, 2026. |
+| Winged Nosk | Complete | User-approved roster, October17, 2026. |
+| The Collector | Complete | User-approved roster, October17, 2026. |
+| God Tamer | Complete | User-approved roster, October17, 2026. |
+| Crystal Guardian | Complete | User-approved roster, October17, 2026. |
+| Enraged Guardian | Complete | User-approved roster, October17, 2026. |
+| Uumuu | Complete | User-approved roster, October17, 2026. |
+| Traitor Lord | Complete | User-approved roster, October17, 2026. |
+| Grey Prince Zote | Complete | User-approved roster, October17, 2026. |
+| Soul Warrior | Complete | User-approved roster, October17, 2026. |
+| Soul Master | Complete | User-approved roster, October17, 2026. |
+| Soul Tyrant | Complete | User-approved roster, October17, 2026. |
+| Dung Defender | Complete | User-approved roster, October17, 2026. |
+| White Defender | Complete | User-approved roster, October17, 2026. |
+| Watcher Knights | Complete | User-approved roster, October17, 2026. |
+| No Eyes | Complete | User-approved roster, October17, 2026. |
+| Marmu | Complete | User-approved roster, October17, 2026. |
+| Xero | Complete | User-approved roster, October17, 2026. |
+| Markoth | Complete | User-approved roster, October17, 2026. |
+| Galien | Complete | User-approved roster, October17, 2026. |
+| Gorb | Complete | User-approved roster, October17, 2026. |
+| Elder Hu | Complete | User-approved roster, October17, 2026. |
+| Brothers Oro & Mato | Complete | User-approved roster, October17, 2026. |
+| Paintmaster Sheo | Complete | User-approved roster, October17, 2026. |
+| Nailsage Sly | Complete | User-approved roster, October17, 2026. |
+| Pure Vessel | Complete | User-approved roster, October17, 2026. |
+| Grimm | Complete | User-approved roster, October17, 2026. |
+| Nightmare King Grimm | Complete | User-approved roster, October17, 2026. |
+| Absolute Radiance | Complete | User-approved roster, October17, 2026. |
 
 ## Shared invariants and evidence
 

@@ -25,7 +25,7 @@ The verifier only reads listed installation files and hashes. It never loads gam
 
 ## Start and report problems
 
-Start both games normally through Steam. Choose Hollow Sols Bridge in a ready main menu; the other game must reach its native menu too. Hollow Knight manages four isolated mod-owned paired slots; Nine Sols follows. Never import or replace vanilla/development saves. Godhome is the primary scope; Classic/Steel Soul remain experimental and encounter/Pantheon support is limited to documented acceptance.
+Start both games normally through Steam. Choose Hollow Sols Bridge in a ready main menu; the other game must reach its native menu too. Hollow Knight manages four isolated mod-owned paired slots; Nine Sols follows. Never import or replace vanilla/development saves. Godhome is the primary scope; Classic/Steel Soul remain experimental and all 44 listed boss encounters are player-approved Complete as of October17. Full Pantheon sequences, every difficulty/binding and recovery remain separately scoped.
 
 Public builds have no F9 debug menu or detailed-capture activation. Unexpected bridge-failure notices offer Prepare Bug Report. Inspect the prepared ZIP, attach it to the prefilled GitHub issue, describe what happened and submit. No logs are automatically uploaded. The private staging repository requires tester access. Existing explicitly empty Support.RepositoryUrl settings remain empty; set that key in each game's local.hollowsols.menu.hk.cfg / local.hollowsols.menu.ns.cfg to https://github.com/emmveepee/Hollow-Sols-Godhome if needed, then restart. Source docs/BUG-REPORTING.md describes local fallbacks.
 

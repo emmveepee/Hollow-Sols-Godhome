@@ -1,5 +1,7 @@
 # Absolute Radiance — current contracts and validation boundary
 
+October17, 2026 player approval: **all 44 listed encounters are Complete**, fully functional with no major issues. This supersedes the October13/partial-retest grades and conflicting pending whole-fight acceptance. It does not certify unreported difficulties/bindings, complete Pantheon sequences, experimental modes, physical menu rebinding, failure reporting or save recovery. Earlier per-issue source/native evidence remains historical; do not infer a new source fix or reopen accepted fights from old pending text. See [canonical roster](ROSTER-COMPLETION.md#whole-fight-player-acceptance).
+
 Current issue states are only in [ROSTER-COMPLETION](ROSTER-COMPLETION.md): G01 (statue prompt) and AR01–05/P14-AR06–10. Pending player approval is distinct from missing source changes.
 
 - Native HK health, phase gates, final-nail event and encounter completion remain authoritative.
